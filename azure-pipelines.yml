@@ -46,3 +46,6 @@ jobs:
         ./bin/repo sync
       workingDirectory: workspace
       displayName: get_sources
+    - script: |
+        ls . -hal
+        ls workspace -hal
