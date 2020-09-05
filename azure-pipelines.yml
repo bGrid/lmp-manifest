@@ -22,7 +22,7 @@ jobs:
       tags: $(Build.SourceVersion)
       Dockerfile: '**/Dockerfile'
 - job: init_workspace
-  pool: Compute Intensive
+  # pool: Compute Intensive
   steps:
     - task: Cache@2
       inputs:
