@@ -10,7 +10,7 @@ variables:
 jobs:
 - job: build_dockerfile
   # Build dockerfile only on master
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   pool:
     vmImage: 'ubuntu-latest'
   steps:
@@ -19,7 +19,8 @@ jobs:
       containerRegistry: 'bGridContainerRegistry'
       repository: 'lmp-bitbake'
       command: 'buildAndPush'
-      tags: $(Build.SourceVersion)
+      # tags: $(Build.SourceVersion)
+      tags: latest
       Dockerfile: '**/Dockerfile'
 - job: init_workspace
   # pool: Compute Intensive
