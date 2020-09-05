@@ -23,11 +23,12 @@ jobs:
       Dockerfile: '**/Dockerfile'
 - job: init_workspace
   # pool: Compute Intensive
+  container: bitbakeContainer
   steps:
     - task: Cache@2
       inputs:
         key: lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
-        path: .
+        path: /workspace
         restoreKeys: |
             lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
             lmp | $(Build.SourceBranchName)
