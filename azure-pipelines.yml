@@ -1,0 +1,42 @@
+resources:
+  containers:
+  - container: bitbakeContainer
+    image: lmp-bitbake
+    endpoint: 'bGridContainerRegistry'
+
+variables:
+  - group: Prod Variables
+
+jobs:
+- job: build_dockerfile
+  # Build dockerfile only on master
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'bGridContainerRegistry'
+      repository: 'lmp-bitbake'
+      command: 'buildAndPush'
+      tags: $(Build.SourceVersion)
+      Dockerfile: '**/Dockerfile'
+- job: init_workspace
+  pool: Compute Intensive
+  steps:
+    - task: Cache@2
+    inputs:
+      key: lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
+      path: .
+      restoreKeys: |
+          lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
+          lmp | $(Build.SourceBranchName)
+    displayName: Restore bitbake build cache
+    - script: |
+        mkdir ~/bin
+        PATH=~/bin:$PATH
+        curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+        chmod a+x ~/bin/repo
+    - script: |
+        repo init -u .
+        repo sync
