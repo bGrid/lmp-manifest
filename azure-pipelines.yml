@@ -25,13 +25,13 @@ jobs:
   pool: Compute Intensive
   steps:
     - task: Cache@2
-    inputs:
-      key: lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
-      path: .
-      restoreKeys: |
-          lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
-          lmp | $(Build.SourceBranchName)
-    displayName: Restore bitbake build cache
+      inputs:
+        key: lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
+        path: .
+        restoreKeys: |
+            lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
+            lmp | $(Build.SourceBranchName)
+      displayName: Restore bitbake build cache
     - script: |
         mkdir ~/bin
         PATH=~/bin:$PATH
