@@ -23,12 +23,17 @@ RUN apt-get update \
 		android-sdk-libsparse-utils android-sdk-ext4-utils ca-certificates \
 		chrpath cpio diffstat file gawk g++ iproute2 iputils-ping less libmagickwand-dev \
 		libmath-prime-util-perl libsdl1.2-dev libssl-dev locales \
-		openjdk-11-jre openssh-client perl-modules python3 python3-requests \
-		make patch repo sudo texinfo vim-tiny wget whiptail libelf-dev git-lfs \
+		openjdk-11-jre openssh-client perl-modules python3 python3-requests python3-pip \
+		make patch sudo texinfo vim-tiny wget whiptail libelf-dev git-lfs \
 	&& apt-get autoremove -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& locale-gen en_US.UTF-8
+
+# Set python3 as default and install west in stead of repo
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10
+RUN pip3 install west
+ENV PATH="${HOME}/.local/bin:${PATH}"
 
 # Create the user which will run the SDK binaries.
 RUN useradd -c $DEV_USER_NAME \

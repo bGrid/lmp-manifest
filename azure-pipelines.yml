@@ -10,7 +10,7 @@ variables:
 jobs:
 - job: build_dockerfile
   # Build dockerfile only on master
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  # condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   pool:
     vmImage: 'ubuntu-latest'
   steps:
@@ -26,7 +26,8 @@ jobs:
   # pool: Compute Intensive
   container: bitbakeContainer
   steps:
-    - checkout: none
+    - checkout: self
+      path: manifest
     - task: Cache@2
       inputs:
         key: lmp | $(Build.SourceBranchName) | $(Build.SourceVersion)
@@ -40,16 +41,12 @@ jobs:
         sshKeySecureFile: id_rsa_azure
     - script: mkdir -p workspace
     - script: |
-        repo version
-        repo init -u git@ssh.dev.azure.com:v3/bGridSolutions/Gateway/lmp-manifest -b $(Build.SourceVersion)
-        repo sync
+        west init -l manifest
+        west update
       workingDirectory: workspace
       displayName: get_sources
     - script: |
         ls . -hal
+        ls manifest -hal
         ls sources -hal
         ls workspace -hal
-    - script : |
-        MACHINE=imx6qdl-pico source setup-environment
-        bitbake lmp-mini-image
-      workingDirectory: workspace
