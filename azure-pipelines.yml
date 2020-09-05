@@ -34,9 +34,8 @@ jobs:
       displayName: Restore bitbake build cache
     - script: |
         mkdir ~/bin
-        PATH=~/bin:$PATH
         curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
     - script: |
-        repo init -u .
-        repo sync
+        ~/repo init -u .
+        ~/repo sync
